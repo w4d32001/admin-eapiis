@@ -9,6 +9,7 @@ use App\Http\Resources\TeacherResource;
 use App\Models\Teacher;
 use App\Models\TeacherType;
 use App\Http\Services\CloudinaryService;
+use Illuminate\Http\Client\ResponseSequence;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,34 @@ class TeacherController extends Controller
             "filters" => $request->only(['search', 'teacher_type_id'])
         ]);
     }
+
+    public function indexApi(Request $request)
+    {
+        $query = Teacher::with(['teacherType', 'creator']);
+
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('phone', 'LIKE', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('teacher_type_id')) {
+            $query->where('teacher_type_id', $request->get('teacher_type_id'));
+        }
+
+        $teachers = $query->paginate(15);
+        $teacherTypes = TeacherType::all();
+
+        return response()->json([
+            "teachers" => TeacherResource::collection($teachers),
+            "teacherTypes" => $teacherTypes,
+            "filters" => $request->only(['search', 'teacher_type_id'])
+        ]);
+    }
+
     public function store(StoreRequest $request)
     {
         try {
