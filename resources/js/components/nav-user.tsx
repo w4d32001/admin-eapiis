@@ -14,10 +14,10 @@ export function NavUser() {
 
     return (
         <SidebarMenu>
-            <SidebarMenuItem>
+            <SidebarMenuItem className='border border-white rounded-xl'>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <SidebarMenuButton size="lg" className="group text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent">
+                        <SidebarMenuButton size="lg" className="group text-white ">
                             <UserInfo user={auth.user} />
                             <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>

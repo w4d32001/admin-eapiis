@@ -6,6 +6,7 @@ use App\Models\Teacher;
 use App\Models\TeacherType;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Hash;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -30,13 +31,17 @@ class DatabaseSeeder extends Seeder
         TeacherType::create([
             "name" => "Jefe de practica",
         ]);
+        TeacherType::create([
+            "name" => "DIRECTOR DEPARTAMENTO ACADEMICO",
+        ]);
+        TeacherType::create([
+            "name" => "DIRECTOR ESCUELA PROFESIONAL",
+        ]);
 
-        Teacher::create([
-            "name" => "Carlos",
-            "academic_degree" => "Doctor",
-            "email" => "carlos@gmail.com",
-            "phone" => "12368547",
-            "teacher_type_id" => 1,
+        User::create([
+            "name" => "administrador",
+            "email" => "datacentereapiis@unamba.edu.pe",
+            "password" => Hash::make('123456789Eapiis')
         ]);
     }
 }

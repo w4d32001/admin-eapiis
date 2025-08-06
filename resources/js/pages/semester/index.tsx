@@ -78,7 +78,7 @@ export default function Index({ semesters }: Props) {
     const filteredSemesters = useMemo(() => {
         return semesters.data.filter((semester) => {
             const matchesSearch = !debouncedSearchTerm || 
-                semester.formatted_name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+                semester.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
                 semester.description?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
             
             return matchesSearch;

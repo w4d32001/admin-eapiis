@@ -20,9 +20,10 @@ class SemesterController extends Controller
         $this->cloudinaryService = $cloudinaryService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $query = Semester::query()->orderBy('created_at', 'desc');
+       
 
         $semesters = $query->paginate(15);
 

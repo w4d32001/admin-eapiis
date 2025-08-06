@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Module\Dashboard\DashboardController;
 use App\Http\Controllers\Module\Gallery\GalleryController;
 use App\Http\Controllers\Module\News\NewsController;
 use App\Http\Controllers\Module\Semester\SemesterController;
@@ -10,14 +12,11 @@ use Cloudinary\Api\Admin\AdminApi;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
+Route::get('/', [AuthenticatedSessionController::class, 'create']
+)->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 });
 
 require __DIR__ . '/settings.php';
@@ -50,3 +49,5 @@ Route::post('semesters', [SemesterController::class, 'store'])->name('semesters.
 Route::post('semesters/{semester}', [SemesterController::class, 'update'])->name('semesters.update');
 Route::delete('semesters/{semester}', [SemesterController::class, 'destroy'])->name('semesters.destroy');
 Route::patch('semesters/{semester}/toggle-status', [SemesterController::class, 'toggleStatus'])->name('semesters.toggle-status');
+
+/**/

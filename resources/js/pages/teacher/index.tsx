@@ -85,9 +85,7 @@ export default function Index({ teachers, teacherTypes }: Props) {
                             <Search className="absolute top-2 right-2"></Search>
                         </div>
                         <div className="flex items-center gap-x-2">
-                            <Button size="lg" className="flex items-center bg-purple-600 transition-colors ease-in hover:bg-purple-700">
-                                <Download></Download> Descargar
-                            </Button>
+                            
                             <Button
                                 onClick={openModal}
                                 size="lg"
