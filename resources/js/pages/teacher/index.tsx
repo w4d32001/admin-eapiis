@@ -8,7 +8,7 @@ import { showToast } from '@/lib/toast';
 import { BreadcrumbItem } from '@/types';
 import { Teacher, TeacherType } from '@/types/teacher';
 import { Head, useForm } from '@inertiajs/react';
-import { Download, Edit, Plus, Search, Trash } from 'lucide-react';
+import { Edit, Plus, Search, Trash } from 'lucide-react';
 import { useState } from 'react';
 
 type Props = {
@@ -71,6 +71,7 @@ export default function Index({ teachers, teacherTypes }: Props) {
             <div className="flex flex-col gap-y-8 lg:py-8">
                 <div className="flex items-center justify-between px-8 py-4">
                     <span className="font-rubik text-2xl font-semibold text-black/90 uppercase">Docentes</span>
+                    
                 </div>
                 <div className="flex w-full flex-col items-center justify-center gap-y-6">
                     <div className="flex w-full items-center justify-between p-4">
@@ -84,8 +85,8 @@ export default function Index({ teachers, teacherTypes }: Props) {
                             />
                             <Search className="absolute top-2 right-2"></Search>
                         </div>
+
                         <div className="flex items-center gap-x-2">
-                            
                             <Button
                                 onClick={openModal}
                                 size="lg"

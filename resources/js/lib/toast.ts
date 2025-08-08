@@ -15,19 +15,17 @@ const Toast = MySwal.mixin({
   },
 });
 
-// Configuración base para modales de confirmación
 const ConfirmModal = MySwal.mixin({
   customClass: {
     container: 'swal2-container-high-z',
     popup: 'swal2-popup-confirm',
   },
   backdrop: true,
-  allowOutsideClick: false, // Evitar cerrar accidentalmente
+  allowOutsideClick: false,
   allowEscapeKey: true,
   buttonsStyling: true,
   focusConfirm: true,
   reverseButtons: false,
-  // Z-index alto para asegurar que esté por encima de todo
   heightAuto: true,
   width: '32rem',
 });

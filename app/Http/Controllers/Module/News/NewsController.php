@@ -120,7 +120,6 @@ class NewsController extends Controller
 
             return redirect()->back()->with('success', 'Noticia actualizada exitosamente.');
         } catch (\Exception $e) {
-            DB::rollBack();
             \Log::error('Error actualizando noticia: ' . $e->getMessage(), [
                 'news_id' => $id,
                 'data' => $data ?? null,

@@ -101,7 +101,6 @@ class GalleryController extends Controller
 
             return redirect()->back()->with('success', 'Galería actualizada exitosamente.');
         } catch (\Exception $e) {
-            DB::rollBack();
             \Log::error('Error actualizando galería: ' . $e->getMessage(), [
                 'gallery_id' => $id,
                 'data' => $data ?? null,

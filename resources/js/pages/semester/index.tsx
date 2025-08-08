@@ -1,4 +1,3 @@
-
 import CreateSemesterModal from '@/components/semester/CreateSemesterModal';
 import EditSemesterModal from '@/components/semester/EditSemesterModal';
 import { Button } from '@/components/ui/button';
@@ -11,8 +10,8 @@ import { showToast } from '@/lib/toast';
 import { BreadcrumbItem } from '@/types';
 import { Semester } from '@/types/semester';
 import { Head, useForm } from '@inertiajs/react';
-import { Edit, Plus, Search, Trash, GraduationCap, Eye } from 'lucide-react';
-import React, { useState, useMemo } from 'react';
+import { Edit, Eye, GraduationCap, Plus, Search, Trash } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 type Props = {
     semesters: {
@@ -36,7 +35,7 @@ export default function Index({ semesters }: Props) {
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState<Semester | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
-    
+
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
     const { delete: destroy, patch } = useForm();
 
@@ -53,21 +52,20 @@ export default function Index({ semesters }: Props) {
 
     const handleToggleStatus = (semester: Semester) => {
         const action = semester.is_active ? 'desactivar' : 'activar';
-        
-        showToast.confirm(
-            `¿Estás seguro que deseas ${action} este semestre?`,
-            `El semestre será ${semester.is_active ? 'desactivado' : 'activado'}.`
-        ).then((confirmed) => {
-            if (!confirmed) return;
 
-            patch(`/semesters/${semester.id}/toggle-status`, {
-                onSuccess: () => {
-                    const status = semester.is_active ? 'desactivado' : 'activado';
-                    showToast.success(`Semestre ${status} exitosamente`);
-                },
-                onError: (error) => console.log(error),
+        showToast
+            .confirm(`¿Estás seguro que deseas ${action} este semestre?`, `El semestre será ${semester.is_active ? 'desactivado' : 'activado'}.`)
+            .then((confirmed) => {
+                if (!confirmed) return;
+
+                patch(`/semesters/${semester.id}/toggle-status`, {
+                    onSuccess: () => {
+                        const status = semester.is_active ? 'desactivado' : 'activado';
+                        showToast.success(`Semestre ${status} exitosamente`);
+                    },
+                    onError: (error) => console.log(error),
+                });
             });
-        });
     };
 
     const handleEdit = (semester: Semester) => {
@@ -77,17 +75,18 @@ export default function Index({ semesters }: Props) {
 
     const filteredSemesters = useMemo(() => {
         return semesters.data.filter((semester) => {
-            const matchesSearch = !debouncedSearchTerm || 
+            const matchesSearch =
+                !debouncedSearchTerm ||
                 semester.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
                 semester.description?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
-            
+
             return matchesSearch;
         });
     }, [semesters.data, debouncedSearchTerm]);
 
     const availableNumbers = useMemo(() => {
-        const existingNumbers = semesters.data.map(s => s.number);
-        return Array.from({ length: 10 }, (_, i) => i + 1).filter(n => !existingNumbers.includes(n));
+        const existingNumbers = semesters.data.map((s) => s.number);
+        return Array.from({ length: 10 }, (_, i) => i + 1).filter((n) => !existingNumbers.includes(n));
     }, [semesters.data]);
 
     return (
@@ -97,32 +96,23 @@ export default function Index({ semesters }: Props) {
                 <div className="flex items-center justify-between px-8 py-4">
                     <div className="flex items-center gap-3">
                         <GraduationCap className="h-8 w-8 text-blue-600" />
-                        <span className="font-rubik text-2xl font-semibold text-black/90 uppercase">
-                            Semestres Académicos
-                        </span>
+                        <span className="font-rubik text-2xl font-semibold text-black/90 uppercase">Semestres Académicos</span>
                     </div>
-                    <Button
-                        onClick={() => setShowCreateModal(true)}
-                        className="flex items-center gap-2"
-                        disabled={availableNumbers.length === 0}
-                    >
+                    <Button onClick={() => setShowCreateModal(true)} className="flex items-center gap-2" disabled={availableNumbers.length === 0}>
                         <Plus className="h-4 w-4" />
                         Crear Semestre
                     </Button>
                 </div>
 
                 {availableNumbers.length === 0 && (
-                    <div className="mx-8 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                        <p className="text-amber-800 text-sm">
-                            Ya has creado todos los semestres disponibles (1-10).
-                        </p>
+                    <div className="mx-8 rounded-lg border border-amber-200 bg-amber-50 p-4">
+                        <p className="text-sm text-amber-800">Ya has creado todos los semestres disponibles (1-10).</p>
                     </div>
                 )}
 
-                {/* Filtros */}
                 <div className="flex flex-col gap-4 px-8 sm:flex-row sm:items-center sm:gap-6">
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                         <Input
                             placeholder="Buscar semestres..."
                             value={searchTerm}
@@ -132,7 +122,6 @@ export default function Index({ semesters }: Props) {
                     </div>
                 </div>
 
-                {/* Estadísticas */}
                 <div className="grid grid-cols-1 gap-4 px-8 sm:grid-cols-3">
                     <div className="rounded-lg bg-blue-50 p-4">
                         <div className="flex items-center gap-2">
@@ -146,9 +135,7 @@ export default function Index({ semesters }: Props) {
                             <Eye className="h-5 w-5 text-green-600" />
                             <span className="text-sm font-medium text-green-900">Activos</span>
                         </div>
-                        <p className="text-2xl font-bold text-green-600">
-                            {semesters.data.filter(s => s.is_active).length}
-                        </p>
+                        <p className="text-2xl font-bold text-green-600">{semesters.data.filter((s) => s.is_active).length}</p>
                     </div>
                     <div className="rounded-lg bg-gray-50 p-4">
                         <div className="flex items-center gap-2">
@@ -159,7 +146,6 @@ export default function Index({ semesters }: Props) {
                     </div>
                 </div>
 
-                {/* Tabla */}
                 <div className="px-8">
                     <Table>
                         <TableCaption>
@@ -169,19 +155,19 @@ export default function Index({ semesters }: Props) {
                         </TableCaption>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Semestre</TableHead>
-                                <TableHead>Imagen</TableHead>
-                                <TableHead>Descripción</TableHead>
-                                <TableHead>Estado</TableHead>
-                                <TableHead>Fecha de creación</TableHead>
-                                <TableHead>Creado por</TableHead>
-                                <TableHead className="text-right">Acciones</TableHead>
+                                <TableHead className="min-w-48">Semestre</TableHead>
+                                <TableHead className="w-20">Imagen</TableHead>
+                                <TableHead className="max-w-80 min-w-60">Descripción</TableHead>
+                                <TableHead className="min-w-32">Estado</TableHead>
+                                <TableHead className="min-w-40">Fecha de creación</TableHead>
+                                <TableHead className="min-w-32">Creado por</TableHead>
+                                <TableHead className="min-w-24 text-right">Acciones</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {filteredSemesters.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={7} className="text-center py-8">
+                                    <TableCell colSpan={7} className="py-8 text-center">
                                         <div className="flex flex-col items-center gap-2 text-gray-500">
                                             <GraduationCap className="h-8 w-8" />
                                             <span>No hay semestres que mostrar</span>
@@ -191,20 +177,20 @@ export default function Index({ semesters }: Props) {
                             ) : (
                                 filteredSemesters.map((semester) => (
                                     <TableRow key={semester.id}>
-                                        <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 font-bold">
+                                        <TableCell className="max-w-60 min-w-48">
+                                            <div className="flex items-start gap-3">
+                                                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-600">
                                                     {semester.number}
                                                 </div>
-                                                <div>
-                                                    <p className="font-medium">{semester.formatted_name}</p>
-                                                    <p className="text-sm text-gray-500">Semestre {semester.number}</p>
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="leading-tight font-medium break-words">{semester.formatted_name}</p>
+                                                    <p className="mt-1 text-sm text-gray-500">Semestre {semester.number}</p>
                                                 </div>
                                             </div>
                                         </TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-gray-100">
+                                        <TableCell className="w-20">
+                                            <div className="flex items-center justify-center">
+                                                <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                                                     {semester.image ? (
                                                         <img
                                                             src={semester.image}
@@ -219,10 +205,13 @@ export default function Index({ semesters }: Props) {
                                                 </div>
                                             </div>
                                         </TableCell>
-                                        <TableCell>
-                                            <div className="max-w-xs">
+                                        <TableCell className="max-w-80 min-w-60">
+                                            <div className="min-w-0">
                                                 {semester.description ? (
-                                                    <p className="text-sm text-gray-600 truncate" title={semester.description}>
+                                                    <p
+                                                        className="text-sm leading-tight break-words whitespace-normal text-gray-600"
+                                                        title={semester.description}
+                                                    >
                                                         {semester.description}
                                                     </p>
                                                 ) : (
@@ -230,49 +219,56 @@ export default function Index({ semesters }: Props) {
                                                 )}
                                             </div>
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="min-w-32">
                                             <div className="flex items-center gap-2">
-                                                <Switch
-                                                    checked={semester.is_active}
-                                                    onCheckedChange={() => handleToggleStatus(semester)}
-                                                />
-                                                <span className={`text-sm font-medium ${
-                                                    semester.is_active ? 'text-green-600' : 'text-gray-500'
-                                                }`}>
+                                                <Switch checked={semester.is_active} onCheckedChange={() => handleToggleStatus(semester)} />
+                                                <span
+                                                    className={`text-sm font-medium whitespace-nowrap ${
+                                                        semester.is_active ? 'text-green-600' : 'text-gray-500'
+                                                    }`}
+                                                >
                                                     {semester.is_active ? 'Activo' : 'Inactivo'}
                                                 </span>
                                             </div>
                                         </TableCell>
-                                        <TableCell>
-                                            {new Date(semester.updated_at).toLocaleDateString('es-ES', {
-                                                year: 'numeric',
-                                                month: 'short',
-                                                day: 'numeric',
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })}
+                                        <TableCell className="min-w-40">
+                                            <div className="text-sm">
+                                                <div>
+                                                    {new Date(semester.updated_at).toLocaleDateString('es-ES', {
+                                                        day: '2-digit',
+                                                        month: '2-digit',
+                                                        year: '2-digit',
+                                                    })}
+                                                </div>
+                                                <div className="text-gray-500">
+                                                    {new Date(semester.updated_at).toLocaleTimeString('es-ES', {
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                    })}
+                                                </div>
+                                            </div>
                                         </TableCell>
-                                        <TableCell>
-                                            {semester.updated_by || 'Usuario'}
+                                        <TableCell className="max-w-40 min-w-32">
+                                            <div className="text-sm break-words">{semester.updated_by || 'Usuario'}</div>
                                         </TableCell>
-                                        <TableCell className="text-right">
+                                        <TableCell className="min-w-24 text-right">
                                             <div className="flex justify-end gap-2">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => handleEdit(semester)}
-                                                        className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
-                                                    >
-                                                        <Edit className="h-4 w-4" />
-                                                    </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => handleDelete(semester.id.toString())}
-                                                        className="h-8 w-8 p-0 text-red-600 hover:bg-red-50 hover:text-red-700"
-                                                    >
-                                                        <Trash className="h-4 w-4" />
-                                                    </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => handleEdit(semester)}
+                                                    className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+                                                >
+                                                    <Edit className="h-4 w-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => handleDelete(semester.id.toString())}
+                                                    className="h-8 w-8 p-0 text-red-600 hover:bg-red-50 hover:text-red-700"
+                                                >
+                                                    <Trash className="h-4 w-4" />
+                                                </Button>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -283,11 +279,7 @@ export default function Index({ semesters }: Props) {
                 </div>
             </div>
 
-            <CreateSemesterModal
-                isOpen={showCreateModal}
-                onClose={() => setShowCreateModal(false)}
-                availableNumbers={availableNumbers}
-            />
+            <CreateSemesterModal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} availableNumbers={availableNumbers} />
 
             {selectedSemester && (
                 <EditSemesterModal

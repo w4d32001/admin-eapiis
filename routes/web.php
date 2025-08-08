@@ -1,18 +1,22 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Module\Dashboard\DashboardController;
 use App\Http\Controllers\Module\Gallery\GalleryController;
 use App\Http\Controllers\Module\News\NewsController;
 use App\Http\Controllers\Module\Semester\SemesterController;
 use App\Http\Controllers\Module\Teacher\TeacherController;
 use App\Http\Controllers\Module\Teacher\TeacherTypeController;
+use App\Http\Controllers\Module\User\UserController;
 use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Admin\AdminApi;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', [AuthenticatedSessionController::class, 'create']
+Route::get(
+    '/',
+    [AuthenticatedSessionController::class, 'create']
 )->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -50,4 +54,13 @@ Route::post('semesters/{semester}', [SemesterController::class, 'update'])->name
 Route::delete('semesters/{semester}', [SemesterController::class, 'destroy'])->name('semesters.destroy');
 Route::patch('semesters/{semester}/toggle-status', [SemesterController::class, 'toggleStatus'])->name('semesters.toggle-status');
 
+Route::get('users', [UserController::class, 'index'])->name('user.index');
+
+Route::get('register', [RegisteredUserController::class, 'create'])
+    ->name('register');
+
+Route::post('register', [RegisteredUserController::class, 'store']);
+
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+Route::delete('/users/{id}/force', [UserController::class, 'forceDestroy'])->name('users.force-destroy');
 /**/

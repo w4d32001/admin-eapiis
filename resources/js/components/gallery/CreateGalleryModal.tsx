@@ -31,13 +31,11 @@ export default function CreateGalleryModal({ isOpen, onClose }: CreateGalleryMod
     const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            // Validar tipo de archivo
             if (!file.type.startsWith('image/')) {
                 showToast.error('Por favor selecciona una imagen válida');
                 return;
             }
 
-            // Validar tamaño (máximo 5MB)
             if (file.size > 5 * 1024 * 1024) {
                 showToast.error('La imagen debe ser menor a 5MB');
                 return;
@@ -46,7 +44,6 @@ export default function CreateGalleryModal({ isOpen, onClose }: CreateGalleryMod
             setSelectedImage(file);
             setData('image', file);
             
-            // Crear preview
             const reader = new FileReader();
             reader.onload = (e) => {
                 setImagePreview(e.target?.result as string);
@@ -100,13 +97,11 @@ export default function CreateGalleryModal({ isOpen, onClose }: CreateGalleryMod
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-            {/* Overlay */}
             <div 
                 className="absolute inset-0 bg-black/50"
                 onClick={handleClose}
             />
             
-            {/* Modal */}
             <div className="relative z-10 w-full max-w-md mx-4 bg-white rounded-lg shadow-xl">
                 <div className="flex items-center justify-between p-6 border-b">
                     <h3 className="text-lg font-semibold text-gray-900">
@@ -124,7 +119,6 @@ export default function CreateGalleryModal({ isOpen, onClose }: CreateGalleryMod
 
                 <form onSubmit={handleSubmit} className="p-6">
                     <div className="space-y-6">
-                        {/* Selector de tipo */}
                         <div className="space-y-2">
                             <Label htmlFor="type">Tipo de Galería *</Label>
                             <select
@@ -146,7 +140,6 @@ export default function CreateGalleryModal({ isOpen, onClose }: CreateGalleryMod
                             )}
                         </div>
 
-                        {/* Selector de imagen */}
                         <div className="space-y-2">
                             <Label htmlFor="image">Imagen *</Label>
                             
@@ -203,8 +196,7 @@ export default function CreateGalleryModal({ isOpen, onClose }: CreateGalleryMod
                             )}
                         </div>
                     </div>
-
-                    {/* Botones */}
+                    
                     <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
                         <Button
                             type="button"

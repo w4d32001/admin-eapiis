@@ -19,7 +19,7 @@ export default function CreateTeacherModal({ open, setOpen, teacherTypes, teache
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent className="sm:min-w-[800px]">
+            <DialogContent className="sm:min-w-[800px] max-h-[95%] overflow-auto">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>{description}</DialogDescription>
