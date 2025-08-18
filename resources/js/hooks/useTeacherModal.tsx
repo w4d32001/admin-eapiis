@@ -15,6 +15,7 @@ export const useTeacherModal = ({ open, setOpen, teacher }: UseTeacherModalProps
         academic_degree: '',
         teacher_type_id: '',
         image: null as File | null,
+        cv: ''
     });
 
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -40,6 +41,7 @@ export const useTeacherModal = ({ open, setOpen, teacher }: UseTeacherModalProps
                     phone: teacher.phone,
                     academic_degree: teacher.academic_degree,
                     teacher_type_id: teacher.teacher_type?.id ?? '',
+                    cv: teacher.cv,
                     image: null,
                 });
                 setSelectedImage(teacher.image || null);

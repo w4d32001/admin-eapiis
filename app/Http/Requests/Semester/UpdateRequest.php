@@ -28,7 +28,7 @@ class UpdateRequest extends FormRequest
                 'sometimes',
                 'required',
                 'integer',
-                'between:1,10',
+                'between:1,11',
                 'unique:semesters,number'.$this->route('semester')
             ],
             'description' => [

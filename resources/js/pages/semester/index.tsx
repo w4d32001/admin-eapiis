@@ -86,7 +86,7 @@ export default function Index({ semesters }: Props) {
 
     const availableNumbers = useMemo(() => {
         const existingNumbers = semesters.data.map((s) => s.number);
-        return Array.from({ length: 10 }, (_, i) => i + 1).filter((n) => !existingNumbers.includes(n));
+        return Array.from({ length: 11 }, (_, i) => i + 1).filter((n) => !existingNumbers.includes(n));
     }, [semesters.data]);
 
     return (

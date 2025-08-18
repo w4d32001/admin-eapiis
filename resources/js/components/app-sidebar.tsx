@@ -3,7 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { GraduationCap, Images, LayoutGrid, Newspaper, UserCheck, Users } from 'lucide-react';
+import { GraduationCap, Images, LayoutGrid, Newspaper, Settings, UserCheck, Users } from 'lucide-react';
 
 const mainNavItems: NavItem[] = [
     {
@@ -35,6 +35,11 @@ const mainNavItems: NavItem[] = [
         title: 'Semestres',
         href: '/semesters',
         icon: GraduationCap    
+    },
+    {
+      title: 'Configuraciones',
+      href: 'settings',
+      icon: Settings
     },
     {
         title: 'Usuarios',

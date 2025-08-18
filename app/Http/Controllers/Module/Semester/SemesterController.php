@@ -61,7 +61,8 @@ class SemesterController extends Controller
                 7 => 'Séptimo',
                 8 => 'Octavo',
                 9 => 'Noveno',
-                10 => 'Décimo'
+                10 => 'Décimo',
+                11 => 'Electivo'
             ];
             $data['name'] = $ordinals[$data['number']] . ' Semestre';
 
@@ -115,7 +116,8 @@ class SemesterController extends Controller
                     7 => 'Séptimo',
                     8 => 'Octavo',
                     9 => 'Noveno',
-                    10 => 'Décimo'
+                    10 => 'Décimo',
+                    11 => 'Electivo'
                 ];
                 $data['name'] = $ordinals[$data['number']] . ' Semestre';
             }

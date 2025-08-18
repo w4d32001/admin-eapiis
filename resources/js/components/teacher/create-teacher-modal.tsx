@@ -108,6 +108,21 @@ export default function CreateTeacherModal({ open, setOpen, teacherTypes, teache
                         </div>
                     </div>
 
+                    <div className="flex w-full flex-col gap-y-4">
+                        <label htmlFor="">Enlace de CV</label>
+
+                        <FormField
+                            label=""
+                            type="text"
+                            value={data.cv}
+                            onChange={(value) => setData('cv', value)}
+                            error={errors.cv}
+                            className='w-full'
+                        />
+                            
+                            {errors.teacher_type_id && <span className="text-sm text-red-600">{errors.teacher_type_id}</span>}
+                    </div>
+
                     <DialogFooter className="mt-16">
                         <DialogClose asChild>
                             <Button size="lg" type="button" variant="outline">

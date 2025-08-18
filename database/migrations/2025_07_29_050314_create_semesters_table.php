@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('semesters', function (Blueprint $table) {
             $table->id();
-             $table->string('name'); // Nombre del semestre (ej: "Primer Semestre", "Segundo Semestre")
-            $table->integer('number')->unique(); // Número del semestre (1-10)
-            $table->string('image')->nullable(); // URL de la imagen
-            $table->string('public_id')->nullable(); // ID público para Cloudinary
-            $table->text('description')->nullable(); // Descripción opcional
+             $table->string('name'); 
+            $table->integer('number')->unique(); 
+            $table->string('image')->nullable(); 
+            $table->string('public_id')->nullable(); 
+            $table->text('description')->nullable(); 
             $table->boolean('is_active')->default(true);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

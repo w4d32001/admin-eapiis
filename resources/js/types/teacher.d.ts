@@ -6,6 +6,7 @@ export interface Teacher {
     phone: string;
     image?: string;
     teacher_type: TeacherType;
+    cv: string;
     updated_at: string;
     updated_by: string;
 };

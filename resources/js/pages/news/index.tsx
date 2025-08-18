@@ -144,11 +144,11 @@ export default function Index({ news }: Props) {
                                                 </TableCell>
 
                                                 <TableCell className="max-w-48 min-w-32">
-                                                    <div className="text-sm font-medium break-words whitespace-normal sm:text-base first-letter-uppercase">{news.title}</div>
+                                                    <div className="text-sm font-medium break-words whitespace-normal sm:text-base first-letter-uppercase ">{news.title}</div>
                                                 </TableCell>
 
                                                 <TableCell className="max-w-80 min-w-40">
-                                                    <div className="text-sm leading-tight break-words whitespace-normal sm:text-base first-letter-uppercase">
+                                                    <div className="text-sm leading-tight break-words whitespace-normal sm:text-base first-letter-uppercase line-clamp-4">
                                                         {news.content}
                                                     </div>
                                                 </TableCell>

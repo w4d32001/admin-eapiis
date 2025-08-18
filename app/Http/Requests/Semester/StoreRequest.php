@@ -25,7 +25,7 @@ class StoreRequest extends FormRequest
             'number' => [
                 'required',
                 'integer',
-                'between:1,10',
+                'between:1,11',
                 'unique:semesters,number'
             ],
             'description' => [

@@ -18,6 +18,7 @@ class Teacher extends Model
         "image",
         "public_id",
         "teacher_type_id",
+        "cv"
     ];
 
     public function teacherType():BelongsTo  

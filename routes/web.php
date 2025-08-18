@@ -9,6 +9,7 @@ use App\Http\Controllers\Module\Semester\SemesterController;
 use App\Http\Controllers\Module\Teacher\TeacherController;
 use App\Http\Controllers\Module\Teacher\TeacherTypeController;
 use App\Http\Controllers\Module\User\UserController;
+use App\Http\Controllers\Module\Setting\SettingController;
 use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Admin\AdminApi;
 use Illuminate\Support\Facades\Route;
@@ -64,3 +65,6 @@ Route::post('register', [RegisteredUserController::class, 'store']);
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 Route::delete('/users/{id}/force', [UserController::class, 'forceDestroy'])->name('users.force-destroy');
 /**/
+
+Route::get('settings', [SettingController::class, 'index'])->name('setting.index');
+Route::post('settings', [SettingController::class, 'store'])->name(name: 'setting.store');

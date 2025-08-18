@@ -29,6 +29,7 @@ class StoreRequest extends FormRequest
             "phone" => ["required", "string", "min:9", "max:12"],
             "teacher_type_id" => ["required", "exists:teacher_types,id"],
             "image" => ["nullable", "image", "mimes:jpeg,png,jpg,gif,webp", "max:2048"],
+            "cv" => ["nullable", "url"]
         ];
     }
       public function messages(): array
@@ -57,6 +58,8 @@ class StoreRequest extends FormRequest
             "image.image" => "El archivo debe ser una imagen válida.",
             "image.mimes" => "La imagen debe ser de tipo: jpeg, png, jpg, gif.",
             "image.max" => "La imagen no puede exceder los 2MB.",
+
+            "cv.url" => "El CV debe ser un enlace"
         ];
     }
 }
