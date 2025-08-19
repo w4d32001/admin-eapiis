@@ -71,7 +71,6 @@ export default function Index({ teachers, teacherTypes }: Props) {
             <div className="flex flex-col gap-y-8 lg:py-8">
                 <div className="flex items-center justify-between px-8 py-4">
                     <span className="font-rubik text-2xl font-semibold text-black/90 uppercase">Docentes</span>
-                    
                 </div>
                 <div className="flex w-full flex-col items-center justify-center gap-y-6">
                     <div className="flex w-full items-center justify-between p-4">
@@ -104,7 +103,7 @@ export default function Index({ teachers, teacherTypes }: Props) {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead className="w-[100px]">Imagen</TableHead>
-                                    <TableHead>Nombre</TableHead>
+                                    <TableHead className="min-w-[150px]">Nombre</TableHead>
                                     <TableHead>Grado academico</TableHead>
                                     <TableHead>Correo</TableHead>
                                     <TableHead>Telefono</TableHead>
@@ -127,13 +126,28 @@ export default function Index({ teachers, teacherTypes }: Props) {
                                             <TableCell>
                                                 <img src={teacher.image} alt="" className="h-16 w-16 rounded-full object-cover" />
                                             </TableCell>
-                                            <TableCell>{teacher.name}</TableCell>
-                                            <TableCell>{teacher.academic_degree}</TableCell>
-                                            <TableCell>{teacher.email}</TableCell>
-                                            <TableCell>{teacher.phone}</TableCell>
-                                            <TableCell>{teacher.teacher_type.name}</TableCell>
-                                            <TableCell>{new Date(teacher.updated_at).toLocaleString()}</TableCell>
-                                            <TableCell className="">{teacher.updated_by ? teacher.updated_by : 'Desconocido'}</TableCell>
+                                            <TableCell className="min-w-[150px] break-words capitalize">{teacher.name}</TableCell>
+                                            <TableCell className="max-w-[200px] truncate" title={teacher.academic_degree}>
+                                                {teacher.academic_degree}
+                                            </TableCell>
+                                            <TableCell className="max-w-[200px] truncate" title={teacher.email}>
+                                                {teacher.email}
+                                            </TableCell>
+                                            <TableCell className="max-w-[120px] truncate" title={teacher.phone}>
+                                                {teacher.phone}
+                                            </TableCell>
+                                            <TableCell className="max-w-[150px] truncate" title={teacher.teacher_type.name}>
+                                                {teacher.teacher_type.name}
+                                            </TableCell>
+                                            <TableCell className="max-w-[140px] truncate" title={new Date(teacher.updated_at).toLocaleString()}>
+                                                {new Date(teacher.updated_at).toLocaleString()}
+                                            </TableCell>
+                                            <TableCell
+                                                className="max-w-[120px] truncate"
+                                                title={teacher.updated_by ? teacher.updated_by : 'Desconocido'}
+                                            >
+                                                {teacher.updated_by ? teacher.updated_by : 'Desconocido'}
+                                            </TableCell>
                                             <TableCell className="text-center">
                                                 <div className="flex items-center justify-center gap-x-3">
                                                     <Button

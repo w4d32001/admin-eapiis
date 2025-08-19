@@ -58,8 +58,8 @@ export default function CreateTeacherModal({ open, setOpen, teacherTypes, teache
                     <div>
                         <h2>Datos Generales</h2>
                     </div>
-                    <div className="flex gap-4">
-                        <FormField label="Nombre" value={data.name} onChange={(value) => setData('name', value)} error={errors.name} />
+                    <div className="flex gap-4 checked ">
+                        <FormField label="Nombre completo" value={data.name} onChange={(value) => setData('name', value)} error={errors.name} className='' />
 
                         <FormField
                             label="Correo"
