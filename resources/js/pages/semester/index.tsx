@@ -209,7 +209,7 @@ export default function Index({ semesters }: Props) {
                                             <div className="min-w-0">
                                                 {semester.description ? (
                                                     <p
-                                                        className="text-sm leading-tight break-words whitespace-normal text-gray-600"
+                                                        className="text-sm leading-tight break-words whitespace-normal text-gray-600 line-clamp-4"
                                                         title={semester.description}
                                                     >
                                                         {semester.description}

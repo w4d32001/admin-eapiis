@@ -103,7 +103,7 @@ export default function Index({ teachers, teacherTypes }: Props) {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead className="w-[100px]">Imagen</TableHead>
-                                    <TableHead className="min-w-[150px]">Nombre</TableHead>
+                                    <TableHead className="max-w-[200px]">Nombre</TableHead>
                                     <TableHead>Grado academico</TableHead>
                                     <TableHead>Correo</TableHead>
                                     <TableHead>Telefono</TableHead>
@@ -126,7 +126,7 @@ export default function Index({ teachers, teacherTypes }: Props) {
                                             <TableCell>
                                                 <img src={teacher.image} alt="" className="h-16 w-16 rounded-full object-cover" />
                                             </TableCell>
-                                            <TableCell className="min-w-[150px] break-words capitalize">{teacher.name}</TableCell>
+                                            <TableCell className="max-w-[200px] leading-tight break-words whitespace-normal capitalize ">{teacher.name}</TableCell>
                                             <TableCell className="max-w-[200px] truncate" title={teacher.academic_degree}>
                                                 {teacher.academic_degree}
                                             </TableCell>
