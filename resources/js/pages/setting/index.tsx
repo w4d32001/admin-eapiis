@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Setting } from '@/types/setting';
 import { Head } from '@inertiajs/react';
-import { Save, X, ZoomIn } from 'lucide-react';
+import { Save, X, ZoomIn, FileText, Download } from 'lucide-react';
 import React, { useState, useEffect, JSX } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -29,6 +29,11 @@ interface ImageItem {
     title: string;
 }
 
+interface PdfItem {
+    name: string;
+    title: string;
+}
+
 interface ModalImage {
     image: string;
     title: string;
@@ -44,10 +49,16 @@ export default function Index({ settings }: Props): JSX.Element {
         errors, 
         processing, 
         selectedImage, 
+        selectedPdf,
         setData, 
         handleSubmit, 
         handleImageChange, 
-        removeImage 
+        handlePdfChange,
+        removeImage,
+        removePdf,
+        formatFileSize,
+        handleDrop,
+        handleDragOver
     } = useSetting();
     
     const [modalImage, setModalImage] = useState<ModalImage | null>(null);
@@ -61,6 +72,10 @@ export default function Index({ settings }: Props): JSX.Element {
         { name: 'malla', title: 'Imagen de la malla curricular' }
     ];
 
+    const pdfItems: PdfItem[] = [
+        { name: 'resolucion', title: 'Resolución del programa' }
+    ];
+
     const openModal = (image: string, title: string): void => {
         setModalImage({ image, title });
         setIsModalOpen(true);
@@ -71,8 +86,6 @@ export default function Index({ settings }: Props): JSX.Element {
         setModalImage(null);
     };
 
-   
-
     const handleGlobalKeyDown = (e: KeyboardEvent): void => {
         if (e.key === 'Escape') {
             closeModal();
@@ -80,7 +93,7 @@ export default function Index({ settings }: Props): JSX.Element {
     };
 
     const handleImageError = (e: ImageErrorEvent): void => {
-        e.target.src = '/img/no-imagen.png';
+        e.target.src = '/img/subir-imagen.png';
     };
 
     const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -92,6 +105,11 @@ export default function Index({ settings }: Props): JSX.Element {
     const handleRemoveImage = (e: React.MouseEvent<HTMLButtonElement>): void => {
         e.stopPropagation();
         removeImage();
+    };
+
+    const handleRemovePdf = (e: React.MouseEvent<HTMLButtonElement>): void => {
+        e.stopPropagation();
+        removePdf();
     };
 
     useEffect((): (() => void) => {
@@ -119,21 +137,21 @@ export default function Index({ settings }: Props): JSX.Element {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Configuraciones de Portadas" />
             
-            {/* Formulario para subir imágenes */}
+            {/* Formulario para subir archivos */}
             <div className="flex flex-col gap-y-4 p-8">
                 <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-slate-800 mb-2">Configuraciones de Portadas</h1>
-                    <p className="text-slate-600">Gestiona las imágenes de portada del sitio web</p>
+                    <h1 className="text-2xl font-bold text-slate-800 mb-2">Configuraciones de Portadas y Documentos</h1>
+                    <p className="text-slate-600">Gestiona las imágenes de portada y documentos del sitio web</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-y-5 rounded-lg border bg-white p-6 shadow-sm">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-y-5 rounded-lg border bg-white p-6 shadow-sm">
+                    <div className="grid grid-cols-1 gap-6">
                         <div className="flex flex-col gap-y-4">
-                            <label htmlFor="teacher-type" className="text-sm font-medium text-slate-700">
-                                Tipo de portada
+                            <label htmlFor="setting-type" className="text-sm font-medium text-slate-700">
+                                Tipo de configuración
                             </label>
                             <select
-                                id="teacher-type"
+                                id="setting-type"
                                 value={data.name || ''}
                                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setData('name', e.target.value)}
                                 className="rounded-lg border border-slate-300 px-4 py-2 text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20"
@@ -141,69 +159,143 @@ export default function Index({ settings }: Props): JSX.Element {
                                 <option value="" disabled>
                                     Seleccione una opción
                                 </option>
-                                <option value="docentes">Portada docentes</option>
-                                <option value="nosotros">Portada nosotros</option>
-                                <option value="plan">Portada plan de estudio</option>
-                                <option value="historia">Imagen de historia</option>
-                                <option value="malla">Imagen de la malla curricular</option>
+                                <optgroup label="Imágenes de portada">
+                                    <option value="docentes">Portada docentes</option>
+                                    <option value="nosotros">Portada nosotros</option>
+                                    <option value="plan">Portada plan de estudio</option>
+                                    <option value="historia">Imagen de historia</option>
+                                    <option value="malla">Imagen de la malla curricular</option>
+                                </optgroup>
+                                <optgroup label="Documentos">
+                                    <option value="resolucion">Resolución del programa</option>
+                                </optgroup>
                             </select>
                             {errors.name && <span className="text-sm text-red-600">{errors.name}</span>}
                         </div>
 
-                        <div className="flex flex-col gap-y-4">
-                            <label className="text-sm font-medium text-slate-700">
-                                Imagen
-                            </label>
-                            <div className="relative">
-                                <input 
-                                    type="file" 
-                                    id="file-input-label" 
-                                    className="hidden" 
-                                    accept="image/*" 
-                                    onChange={handleImageChange} 
-                                />
-                                <label
-                                    htmlFor="file-input-label"
-                                    className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 p-4 transition-colors hover:border-slate-400 hover:bg-slate-50"
-                                >
-                                    <div className="text-center">
-                                        <img
-                                            src={selectedImage || '/img/subir-imagen.png'}
-                                            alt="Vista previa"
-                                            className="mx-auto h-32 w-auto rounded object-cover mb-2"
-                                        />
-                                        <p className="text-sm text-slate-600">
-                                            {selectedImage ? 'Haz clic para cambiar' : 'Haz clic para subir imagen'}
-                                        </p>
-                                    </div>
+                        {/* Mostrar campo de imagen solo si el tipo seleccionado es una imagen */}
+                        {data.name && ['docentes', 'nosotros', 'plan', 'historia', 'malla'].includes(data.name) && (
+                            <div className="flex flex-col gap-y-4">
+                                <label className="text-sm font-medium text-slate-700">
+                                    Imagen
                                 </label>
-
-                                {selectedImage && selectedImage !== '/img/subir-imagen.png' && (
-                                    <button
-                                        type="button"
-                                        onClick={handleRemoveImage}
-                                        className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1.5 text-white transition-colors hover:bg-red-600 shadow-sm"
-                                        aria-label="Eliminar imagen"
+                                <div 
+                                    className="relative"
+                                    onDrop={(e) => handleDrop(e, 'image')}
+                                    onDragOver={handleDragOver}
+                                >
+                                    <input 
+                                        type="file" 
+                                        id="file-input-label" 
+                                        className="hidden" 
+                                        accept="image/*" 
+                                        onChange={handleImageChange} 
+                                    />
+                                    <label
+                                        htmlFor="file-input-label"
+                                        className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 p-4 transition-colors hover:border-slate-400 hover:bg-slate-50"
                                     >
-                                        <X size={14} />
-                                    </button>
-                                )}
+                                        <div className="text-center">
+                                            <img
+                                                src={selectedImage || '/img/subir-imagen.png'}
+                                                alt="Vista previa"
+                                                className="mx-auto h-32 w-auto rounded object-cover mb-2"
+                                            />
+                                            <p className="text-sm text-slate-600">
+                                                {selectedImage ? 'Haz clic para cambiar' : 'Haz clic para subir imagen o arrastra aquí'}
+                                            </p>
+                                            <p className="text-xs text-slate-500 mt-1">
+                                                Máximo 5MB - JPG, PNG, GIF, WebP
+                                            </p>
+                                        </div>
+                                    </label>
+
+                                    {selectedImage && selectedImage !== '/img/subir-imagen.png' && (
+                                        <button
+                                            type="button"
+                                            onClick={handleRemoveImage}
+                                            className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1.5 text-white transition-colors hover:bg-red-600 shadow-sm"
+                                            aria-label="Eliminar imagen"
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    )}
+                                </div>
+                                {errors.image && <span className="text-sm text-red-600">{errors.image}</span>}
                             </div>
-                            {errors.image && <span className="text-sm text-red-600">{errors.image}</span>}
-                        </div>
+                        )}
+
+                        {/* Mostrar campo de PDF solo si el tipo seleccionado es resolucion */}
+                        {data.name === 'resolucion' && (
+                            <div className="flex flex-col gap-y-4">
+                                <label className="text-sm font-medium text-slate-700">
+                                    Documento PDF
+                                </label>
+                                <div 
+                                    className="relative"
+                                    onDrop={(e) => handleDrop(e, 'pdf')}
+                                    onDragOver={handleDragOver}
+                                >
+                                    <input 
+                                        type="file" 
+                                        id="pdf-input-label" 
+                                        className="hidden" 
+                                        accept=".pdf" 
+                                        onChange={handlePdfChange} 
+                                    />
+                                    <label
+                                        htmlFor="pdf-input-label"
+                                        className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 p-6 transition-colors hover:border-slate-400 hover:bg-slate-50"
+                                    >
+                                        {selectedPdf ? (
+                                            <div className="text-center">
+                                                <FileText className="mx-auto h-12 w-12 text-red-500 mb-2" />
+                                                <p className="text-sm font-medium text-slate-700">{selectedPdf.name}</p>
+                                                <p className="text-xs text-slate-500">{formatFileSize(selectedPdf.size)}</p>
+                                                <p className="text-xs text-slate-500 mt-1">Haz clic para cambiar</p>
+                                            </div>
+                                        ) : (
+                                            <div className="text-center">
+                                                <FileText className="mx-auto h-12 w-12 text-slate-400 mb-2" />
+                                                <p className="text-sm text-slate-600">
+                                                    Haz clic para subir PDF o arrastra aquí
+                                                </p>
+                                                <p className="text-xs text-slate-500 mt-1">
+                                                    Máximo 10MB - Solo archivos PDF
+                                                </p>
+                                            </div>
+                                        )}
+                                    </label>
+
+                                    {selectedPdf && (
+                                        <button
+                                            type="button"
+                                            onClick={handleRemovePdf}
+                                            className="absolute -top-2 -right-2 rounded-full bg-red-500 p-1.5 text-white transition-colors hover:bg-red-600 shadow-sm"
+                                            aria-label="Eliminar PDF"
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    )}
+                                </div>
+                                {errors.pdf && <span className="text-sm text-red-600">{errors.pdf}</span>}
+                            </div>
+                        )}
                     </div>
 
                     <Button 
                         type="submit" 
-                        disabled={processing || !data.name || !data.image} 
+                        onClick={handleSubmit}
+                        disabled={processing || !data.name || (!data.image && !data.pdf)} 
                         className="w-fit"
                     >
                         <Save className="w-4 h-4 mr-2" /> 
                         {processing ? 'Guardando...' : 'Guardar Configuración'}
                     </Button>
-                </form>
+                </div>
             </div>
 
+            {/* Sección de Portadas Actuales */}
             <div className="px-8 pb-8">
                 <div className="mb-6">
                     <h2 className="text-xl font-semibold text-slate-800 mb-2">Portadas Actuales</h2>
@@ -215,7 +307,7 @@ export default function Index({ settings }: Props): JSX.Element {
                         const imageData: Setting | undefined = settings.data.find(
                             (s: Setting) => s.name === item.name
                         );
-                        const imageSrc: string = imageData?.image || '/img/no-imagen.png';
+                        const imageSrc: string = imageData?.image || '/img/subir-imagen.png';
                         
                         return (
                             <div
@@ -243,17 +335,73 @@ export default function Index({ settings }: Props): JSX.Element {
                                         </button>
                                     </div>
                                 </div>
+                                
+                                <div className="p-4">
+                                    <h3 className="font-medium text-slate-800 text-sm">{item.title}</h3>
+                                </div>
                             </div>
                         );
                     })}
                 </div>
             </div>
 
+            {/* Sección de Documentos Actuales */}
+            <div className="px-8 pb-8">
+                <div className="mb-6">
+                    <h2 className="text-xl font-semibold text-slate-800 mb-2">Documentos Actuales</h2>
+                    <p className="text-slate-600">Archivos PDF disponibles para descarga</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {pdfItems.map((item: PdfItem) => {
+                        const pdfData: Setting | undefined = settings.data.find(
+                            (s: Setting) => s.name === item.name
+                        );
+                        
+                        return (
+                            <div
+                                key={item.name}
+                                className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-slate-200"
+                            >
+                                <div className="p-6">
+                                    <div className="flex items-center justify-center mb-4">
+                                        <div className="bg-red-100 p-4 rounded-full">
+                                            <FileText className="h-8 w-8 text-red-600" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="text-center">
+                                        <h3 className="font-medium text-slate-800 mb-2">{item.title}</h3>
+                                        
+                                        {pdfData?.pdf ? (
+                                            <div className="space-y-3">
+                                                <p className="text-sm text-green-600 font-medium">✓ Documento disponible</p>
+                                                <a
+                                                    href={pdfData.pdf}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                                                >
+                                                    <Download size={16} />
+                                                    Descargar PDF
+                                                </a>
+                                            </div>
+                                        ) : (
+                                            <p className="text-sm text-slate-500">No hay documento disponible</p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Modal para ver imágenes */}
             {isModalOpen && modalImage && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
-                  
                     <div
-                        className="absolute inset-0 bg-black/10 bg-opacity-80 backdrop-blur-sm"
+                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
                         onClick={handleBackdropClick}
                         role="button"
                         tabIndex={0}

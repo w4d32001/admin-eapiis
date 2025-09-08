@@ -18,6 +18,7 @@ class SettingResource extends JsonResource
             'id'              => $this->id,
             'name'            => $this->name,
             'image'           => $this->image,
+            'pdf'             => $this->pdf,
             'updated_at'      => $this->updated_at?->format('Y-m-d H:i'),
             'updated_by'      => $this->updater?->name ?? 'Desconocido',
         ];

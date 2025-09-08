@@ -12,6 +12,8 @@ class Setting extends Model
     protected $fillable = [
         "name",
         "image",
+        "pdf",
         "public_id",
+        "pdf_public_id",
     ];
 }
